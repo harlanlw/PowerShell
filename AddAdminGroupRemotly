@@ -1,0 +1,12 @@
+$computerFirst = "CHANGE_ME"
+$computerNum = 01..40
+$group = "AD_GROUP_NAME"
+$domain = "DOMAIN_NAME"
+$adminUserName = "DOMAIN_ACCOUNT"
+$adminPassWord = ConvertTo-SecureString -String "PASSWORD_CHANGE_ME" -AsPlainText -Force #Not recommended solution security related, but this works for running it as a scheduled task
+$spwCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $adminUserName, $adminPassWord
+
+foreach ($num in $computerNum){
+$computerName = $computerFirst + ([string]$num).PadLeft(2,'0')
+Invoke-Command -ComputerName $computerName -Credential $spwCredential -ScriptBlock {Add-LocalGroupMember -Group Administrators -Member tmknb\Server_Admins}
+}
